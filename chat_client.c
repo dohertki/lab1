@@ -14,14 +14,46 @@
 #define MAXDATASIZE 100 //FIXME
 
 
+/*
+setsocket(int &n, int count, char *arg){
+
+    if(argc > 1){
+        n = atoi(argv[1]);
+        printf("port set to: %d\n", n);
+    }else{
+        n = 8888;
+        printf("port set to default: %d\n", n);
+    }
+   return 0;
+}
+*/
+
 
 int main(int argc, char *argv[]){
 
-    int sockfd;
+    int sockfd;     //Pointer to socket
+    int port;       //Port number
     struct sockaddr_in serv_addr;
     struct addrinfo hints, *res; //Struct used by getaddrinfo to hold result
 
     char *mycomputer;
+
+
+ 
+
+
+
+
+    if(argc > 1){
+         port = atoi(argv[1]);
+        printf("port set to: %d\n", port);
+    }else{
+        port = 8888;
+        printf("port set to default: %d\n", port);
+    }
+
+
+
     mycomputer = malloc(sizeof(char) * 50);
     
     memset(&hints, 0, sizeof(hints));
@@ -29,7 +61,7 @@ int main(int argc, char *argv[]){
     hints.ai_socktype = SOCK_STREAM;//TPC socket type
 
     gethostname(mycomputer, 50); //returns that name of my computer
-    getaddrinfo(mycomputer, "8888", &hints, &res);
+    getaddrinfo(mycomputer, argv[1], &hints, &res);
 
     printf("This is my local computer: %s \n", mycomputer);
     
@@ -45,24 +77,8 @@ http://stackoverflow.com/questions/1276294/getting-ipv4-address-from-a-sockaddr-
 /************************************************************************************/    
     
     
-  //  printf("inet_ntoa(in_addr)sin = %s\n",inet_ntoa((struct in_addr)addr->sin_addr));
-
 
 /*Set up the struct members*/
-
-    //Set Address family 
-  //  serv_addr.sin_family = AF_INET;
-    //Set IP address
-    // void bcopy(const void *src, void *dest, size_t n);
-//    bcopy((char *)server->h_addr, (char*)&serv_addr.sin_addr.s_addr, server->h_length);
-    //Set IP port        
-//    serv_addr.sin_port = 8888;
-
-
-
-
-
-
 
 
 /*  Setting up client
@@ -82,7 +98,6 @@ http://stackoverflow.com/questions/1276294/getting-ipv4-address-from-a-sockaddr-
         error("Error connecting");
 
     
-//    if(connect(sockfd,(struct sockaddr * ) &serv_addr, sizeof(serv_addr) < 0)//Step2. Connect.
     int n;
     char small_buffer[256];
     char content[255]= "Have a nice day!";
@@ -100,17 +115,25 @@ http://stackoverflow.com/questions/1276294/getting-ipv4-address-from-a-sockaddr-
   
 
 
-
-
-    
-
-
-
-
     return 0;
 
 
-
-
-
 }
+
+
+
+
+
+
+
+
+//  printf("inet_ntoa(in_addr)sin = %s\n",inet_ntoa((struct in_addr)addr->sin_addr));
+
+    //Set Address family 
+  //  serv_addr.sin_family = AF_INET;
+    //Set IP address
+    // void bcopy(const void *src, void *dest, size_t n);
+//    bcopy((char *)server->h_addr, (char*)&serv_addr.sin_addr.s_addr, server->h_length);
+    //Set IP port        
+//    serv_addr.sin_port = 8888;
+//    if(connect(sockfd,(struct sockaddr * ) &serv_addr, sizeof(serv_addr) < 0)//Step2. Connect.
