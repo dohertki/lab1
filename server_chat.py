@@ -9,8 +9,6 @@ import sys # exit()
 import select # select()
 # Test.py
 
-print "Hello World!"
-
 
 HOST = '' #Symbolic name meaning all available interfaces
 PORT = 1850 
@@ -56,20 +54,27 @@ SOCKET_LIST.append(s) #add s to list
 
 
 #now keep talking to the client
+
+conn, addr = s.accept()
+
+print 'Connected with ' + addr[0] + ' : ' + str(addr[1])
+
+S = 'Server> '
+
+
+
 while 1:
     
-    conn, addr = s.accept()
-    print 'Connected with ' + addr[0] + ' : ' + str(addr[1])
 
     data = conn.recv(1024)
     
     print data
     
-    reply = 'OK... ' + data
-    if not data:
-        break
+    message = raw_input(S) 
+    #if not data:
+    #    break
         
-    conn.sendall(data)
+    conn.send('Server> ' + message)
 
 
 
