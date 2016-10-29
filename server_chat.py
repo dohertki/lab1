@@ -30,6 +30,8 @@ except socket.error, msg:
     sys.exit()
 print 'Socket Created'
 
+#s.setblocking(0)
+
 """This code will bind socket to a particular address and port. 
 
 """
@@ -49,39 +51,57 @@ print 'Socket listening'
 
 """Wait to accept a connection- blocking call
 """
-SOCKET_LIST.append(s) #add s to list
+#set up lists for select()
+#Sockets to be read
 
 
 
 #now keep talking to the client
-
-conn, addr = s.accept()
-
-print 'Connected with ' + addr[0] + ' : ' + str(addr[1])
+connections = list([])
+connections.append(s)
 
 S = 'Server> '
 
 
+conn, addr = s.accept()
+
+connections.append(conn)
 
 while 1:
-    
+    print ' looping'    
+    try:
+        ready_to_read, ready_to_write, in_error = select.select(connections ,[],[])
+    except socket.error:
+        continue
 
-    data = conn.recv(1024)
-    
-    print data
-    
-    message = raw_input(S) 
-    #if not data:
-    #    break
+   # else:
+    for sock in ready_to_read:
         
-    conn.send('Server> ' + message)
+        if sock == s:
+            conn, addr = s.accept()
+            print 'Connected with ' + addr[0] + ' : ' + str(addr[1])
+            connections.append(conn)
+            #conn.send('Chat server reply, ok!') 
+        else:      
+            data = conn.recv(2056)
+            print data
+#    for i in ready_to_wrire
+#        else:
+#            #local message
+#            message = raw_input(S) 
+#            conn.send('Server> ')
+
+            conn.send(data)
+
+    for sock in ready_to_write:
+        print 'read?'
+        conn.sendall('Server>' + data)
 
 
 
 #>>> temp = data
 #>>> temp
 #>>> temp.find(">")
-
 
 
 

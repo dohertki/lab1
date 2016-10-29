@@ -107,7 +107,7 @@ http://stackoverflow.com/questions/1276294/getting-ipv4-address-from-a-sockaddr-
     setName(name);
     
     int n;
-    char small_buffer[256];
+    char small_buffer[1024];
     char content[255]= "Have a nice day!";
 
     n= write(sockfd,content ,strlen(content)); //Write cipher text to server
@@ -119,34 +119,37 @@ http://stackoverflow.com/questions/1276294/getting-ipv4-address-from-a-sockaddr-
     if (n < 0) 
         perror("ERROR reading from socket");//        error("Error connecting");
   
-    printf("%s", small_buffer);  
+    printf("%s\n start while loop", small_buffer); 
   
 
-    setName(name);
-
+    
     while(1){
-    printf("%s ",name);
-    getMessage(message, name);
-    printf("The message out of function: %s", message);
+        printf("%s ",name);
+        getMessage(message, name);
+  //  printf("The message out of function: %s", message);
 
     
     
-    w= write(sockfd, message ,strlen(message)); //Write cipher text to server
+        w= write(sockfd, message ,strlen(message)); //Write cipher text to server
     if (w < 0) 
         perror("ERROR writing to socket");
       
-    strcpy(message,"");    
+   // strcpy(message,"");    
     
-    r= read(sockfd, message, strlen(message));
+    bzero(small_buffer,1024);  //clear buffer.
+    n = read(sockfd,small_buffer,1024); //read message back from server.
+    if (n < 0) 
+        perror("ERROR reading from socket");//        error("Error connecting");
+  
+    printf("%s", small_buffer); 
+   // r= read(sockfd, message, 1024);
 
-    if(strlen(message) > 1)
-        printf("%s",message);
+   // if(strlen(message) > 1)
+  //      printf("%s",message);
   
   
   
   }
-
-
 
 
     return 0;
@@ -175,8 +178,6 @@ void setName(char *name){
 
 
 
-
-
 void getMessage(char *msg, char *name){
 
     char input[500]; 
@@ -184,7 +185,7 @@ void getMessage(char *msg, char *name){
 	fgets(input, 500, stdin);
 	strncat(msg,name,500);
 	strncat(msg,input,512);
-	printf("\n%s", msg);
+//	printf("\n%s", msg);
 
     return;
 }
