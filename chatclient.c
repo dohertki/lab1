@@ -102,10 +102,10 @@ http://stackoverflow.com/questions/1276294/getting-ipv4-address-from-a-sockaddr-
         
        readMessage(sockfd);    
       
-  
-  }
 
+    }
 
+    close(sockfd);
     return 0;
 
 
@@ -161,20 +161,19 @@ int getMessage(char *msg, char *name, int sockfd_m){
     int w;
     int quit_flag = 1;
     char input[1024]; 
-    char test[] = "\\quit";
     strcpy(msg,"");    
     
-    printf(":");
+    printf("%s",name);
     bzero(input,1024); 
     fgets(input, 500, stdin);
     input[strlen(input)-1] = '\0';
-//    printf("%s\n",input);
-    if(strcmp(input, "\\quit") == 0){
-//    if(strncmp(input, test, 5 ) == 0 ){
-        strncat(msg,"User <", 500);
-        strncat(msg, name, 500);
-        strncat(msg, "has left chat!\n", 500);
+    if(strncmp(input, "\\quit", strlen(input)) == 0\
+        && strlen(input) > 4){
+//        strncat(msg,"\\quit User <", 500);
+//        strncat(msg, name, 500);
+//        strncat(msg, "has left chat!\n", 500);
         quit_flag = 0;
+        printf("Quitting chat\n");
     }else{
         strncat(msg,name,500);
         strncat(msg,input,512);
@@ -211,7 +210,7 @@ void readMessage(int sockfd_r){
     if (n < 0) 
         perror("ERROR reading from socket");//        error("Error connecting");
   
-    printf("%s", small_buffer); 
+    printf("%s\n", small_buffer); 
     
     return;
 
