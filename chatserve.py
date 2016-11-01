@@ -75,16 +75,21 @@ connections.append(s)
 
 def readMessage(conn):
     data = conn.recv(2056)
+
     print data
+
     
-    if data == '\quit':
-        print '....disconnecting user'
-        conn.close()
-        conn.send('\n')
-        connections.remove(conn);
-        print 'List'.join(map(str,connections))    
-    else:
-        print 'noquit'
+#    elif data < 0:
+#        return       
+#    elif data == 0:
+
+#        print 'lost connection with client'
+
+#        if                              # a.startswith(''):
+#            print '....disconnecting user'
+#            conn.close()
+#           connections.remove(conn);
+#            print 'List'.join(map(str,connections))    
 
 ################################################################
 #                          sendMessage()                       #
@@ -95,19 +100,23 @@ def readMessage(conn):
 ################################################################
 
 def sendMessage(conn):
-    data = raw_input("Server> ")
-    conn.send(data)
-
-
-
-while 1:
+    msg = raw_input("Server> ")
+    if msg == '\quit' :
+        print 'Server quitting...'
+        return 0 
+    else:
+        msg = S + msg
+        conn.send(msg)
+        return 1
+    
+loop = 1
+while loop:
     print ','.join(map(str,connections))    
     try:
         ready_to_read, ready_to_write, in_error = select.select(connections ,[],[])
     except socket.error:
        break 
 
-   # else:
     for sock in ready_to_read:
         
         if sock == s:
@@ -118,14 +127,15 @@ while 1:
             conn.send('Chat server reply, ok!. Don''t eat green mushrooms') 
         else:     
             readMessage(conn)
-            sendMessage(conn)        
+            loop = sendMessage(conn)
+
+        
+
 
     time.sleep(0)
-    
-
 
 
 conn.close()
 s.close()
-
+exit()
 
